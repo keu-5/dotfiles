@@ -131,8 +131,10 @@ return {
             end
 
             -- LSPサーバーの設定
+            -- setup_handlersの存在確認とフォールバック処理
             if mason_lspconfig.setup_handlers then
                 mason_lspconfig.setup_handlers({
+                    -- デフォルトハンドラー
                     function(server_name)
                         local has_lspconfig, lspconfig = pcall(require, "lspconfig")
                         if has_lspconfig and lspconfig[server_name] then
@@ -146,7 +148,20 @@ return {
                     end,
                 })
             else
-                vim.notify("mason-lspconfig.setup_handlers not available", vim.log.levels.WARN)
+                -- フォールバック：手動でLSPサーバーを設定
+                local has_lspconfig, lspconfig = pcall(require, "lspconfig")
+                if has_lspconfig then
+                    for server_name, _ in pairs(servers) do
+                        if lspconfig[server_name] then
+                            lspconfig[server_name].setup({
+                                capabilities = capabilities,
+                                on_attach = on_attach,
+                                settings = servers[server_name],
+                                filetypes = (servers[server_name] or {}).filetypes,
+                            })
+                        end
+                    end
+                end
             end
 
             -- 診断の設定
