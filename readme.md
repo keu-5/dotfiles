@@ -34,6 +34,10 @@ chmod +x install.sh && ./install.sh
 
 > ※ すでにリンク先が存在する場合は上書きされます（安全のため事前にバックアップを推奨）
 
+### フォントの設定
+
+`install.sh`でフォントがインストールされます。`Hack Nerd Font Mono`を設定してください
+
 ## ✅ Homebrew で自動インストールされるもの
 
 - zsh-autosuggestions
