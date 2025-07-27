@@ -42,11 +42,11 @@ return {
     event = "VeryLazy",
     opts = {},
     keys = {
-      { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-      { "S",     mode = { "n", "o", "x" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-      { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
-      { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-      { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+      { "<leader>j", mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash Jump" },
+      { "<leader>J", mode = { "n", "o", "x" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+      { "r",         mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+      { "R",         mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>",     mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
     },
   },
 
@@ -89,16 +89,7 @@ return {
             g = true,
           },
         },
-        icons = {
-          breadcrumb = "»",
-          separator = "➜",
-          group = "+",
-        },
-        popup_mappings = {
-          scroll_down = "<c-d>",
-          scroll_up = "<c-u>",
-        },
-        window = {
+        win = {
           border = "rounded",
           position = "bottom",
           margin = { 1, 0, 1, 0 },
@@ -111,28 +102,28 @@ return {
           spacing = 3,
           align = "left",
         },
-        ignore_missing = true,
-        hidden = { "<silent>", "<cmd>", "<Cmd>", "<CR>", "call", "lua ", "^:", "^ " },
+        filter = function(mapping)
+          return true
+        end,
         show_help = true,
-        triggers = "auto",
-        triggers_blacklist = {
-          i = { "j", "k" },
-          v = { "j", "k" },
+        triggers = {
+          { "<auto>", mode = "nxso" },
         },
       })
 
-      -- グループ名の設定
-      wk.register({
-        ["<leader>f"] = { name = "+find" },
-        ["<leader>c"] = { name = "+code" },
-        ["<leader>d"] = { name = "+debug" },
-        ["<leader>g"] = { name = "+git" },
-        ["<leader>h"] = { name = "+hunks" },
-        ["<leader>r"] = { name = "+rename" },
-        ["<leader>s"] = { name = "+search" },
-        ["<leader>t"] = { name = "+toggle" },
-        ["<leader>w"] = { name = "+workspace" },
-        ["<leader>b"] = { name = "+buffer" },
+      -- グループ名の設定（新しい形式）
+      wk.add({
+        { "<leader>f", group = "find" },
+        { "<leader>c", group = "code" },
+        { "<leader>d", group = "debug" },
+        { "<leader>g", group = "git" },
+        { "<leader>h", group = "hunks" },
+        { "<leader>j", group = "jump" },
+        { "<leader>r", group = "rename" },
+        { "<leader>s", group = "search" },
+        { "<leader>t", group = "toggle" },
+        { "<leader>w", group = "workspace" },
+        { "<leader>b", group = "buffer" },
       })
     end,
   },
