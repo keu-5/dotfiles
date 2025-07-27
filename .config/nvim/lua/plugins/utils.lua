@@ -18,6 +18,7 @@ return {
                         -- ディレクトリとファイルを分類
                         for _, file in ipairs(files) do
                             local filename = vim.fn.fnamemodify(file, ":t")
+                            -- 隠しファイルをスキップ（.で始まるもの）しない
                             if vim.fn.isdirectory(file) == 1 then
                                 table.insert(dirs, { name = filename, path = file, type = "dir" })
                             else
@@ -40,7 +41,7 @@ return {
 
                         -- モーダルウィンドウの作成
                         local width = 70
-                        local height = math.min(#all_items + 8, 25)
+                        local height = math.min(#all_items + 12, 25)
                         local row = math.floor((vim.o.lines - height) / 2)
                         local col = math.floor((vim.o.columns - width) / 2)
 
@@ -59,8 +60,11 @@ return {
 
                         table.insert(content, "")
                         table.insert(content, "キー操作:")
-                        table.insert(content, "  数字: ファイル/ディレクトリを開く")
-                        table.insert(content, "  Enter: ファイル/ディレクトリを開く")
+                        table.insert(content, "  数字/Enter: ファイル/ディレクトリを開く")
+                        table.insert(content, "  A: ディレクトリを作成")
+                        table.insert(content, "  a: ファイルを作成")
+                        table.insert(content, "  d: ファイル/ディレクトリを削除")
+                        table.insert(content, "  r: リネーム")
                         table.insert(content, "  t: ツリー表示切り替え")
                         table.insert(content, "  ..: 親ディレクトリへ")
                         table.insert(content, "  q/Esc: 閉じる")
@@ -100,6 +104,13 @@ return {
                             end
                         end
 
+                        local function refresh_modal()
+                            close_modal()
+                            vim.defer_fn(function()
+                                show_file_modal()
+                            end, 50)
+                        end
+
                         local function open_item(index)
                             if all_items[index] then
                                 local item = all_items[index]
@@ -117,13 +128,95 @@ return {
                             end
                         end
 
-                        -- 数字キーでファイル/ディレクトリを開く
-                        for i = 1, math.min(#all_items, 99) do
-                            if i <= 9 then
-                                vim.keymap.set("n", tostring(i), function()
-                                    open_item(i)
-                                end, { buffer = buf, nowait = true })
+                        local function create_directory()
+                            close_modal()
+                            vim.ui.input({ prompt = "ディレクトリ名: " }, function(input)
+                                if input and input ~= "" then
+                                    local dir_path = vim.fn.expand(cwd .. "/" .. input)
+                                    vim.fn.mkdir(dir_path, "p")
+                                    vim.notify("ディレクトリを作成しました: " .. input, vim.log.levels.INFO)
+                                    refresh_modal()
+                                else
+                                    refresh_modal()
+                                end
+                            end)
+                        end
+
+                        local function create_file()
+                            close_modal()
+                            vim.ui.input({ prompt = "ファイル名: " }, function(input)
+                                if input and input ~= "" then
+                                    local file_path = vim.fn.expand(cwd .. "/" .. input)
+                                    -- ディレクトリが存在しない場合は作成
+                                    local dir = vim.fn.fnamemodify(file_path, ":h")
+                                    vim.fn.mkdir(dir, "p")
+                                    -- 空のファイルを作成
+                                    vim.fn.writefile({}, file_path)
+                                    vim.notify("ファイルを作成しました: " .. input, vim.log.levels.INFO)
+                                    -- ファイルを開く
+                                    vim.cmd("edit " .. vim.fn.fnameescape(file_path))
+                                else
+                                    refresh_modal()
+                                end
+                            end)
+                        end
+
+                        local function delete_item()
+                            local line_num = vim.api.nvim_win_get_cursor(win)[1]
+                            local item_index = line_num - 3 -- ヘッダー分を除く
+
+                            if item_index > 0 and item_index <= #all_items then
+                                local item = all_items[item_index]
+                                close_modal()
+
+                                local confirm_msg = string.format("本当に '%s' を削除しますか？ (y/N): ", item.name)
+                                vim.ui.input({ prompt = confirm_msg }, function(input)
+                                    if input and (input:lower() == "y" or input:lower() == "yes") then
+                                        if item.type == "dir" then
+                                            -- ディレクトリの削除（中身があっても削除）
+                                            vim.fn.delete(item.path, "rf")
+                                        else
+                                            -- ファイルの削除
+                                            vim.fn.delete(item.path)
+                                        end
+                                        vim.notify("削除しました: " .. item.name, vim.log.levels.INFO)
+                                    end
+                                    refresh_modal()
+                                end)
                             end
+                        end
+
+                        local function rename_item()
+                            local line_num = vim.api.nvim_win_get_cursor(win)[1]
+                            local item_index = line_num - 3 -- ヘッダー分を除く
+
+                            if item_index > 0 and item_index <= #all_items then
+                                local item = all_items[item_index]
+                                close_modal()
+
+                                vim.ui.input({
+                                    prompt = "新しい名前: ",
+                                    default = item.name
+                                }, function(input)
+                                    if input and input ~= "" and input ~= item.name then
+                                        local new_path = vim.fn.expand(cwd .. "/" .. input)
+                                        local success = vim.loop.fs_rename(item.path, new_path)
+                                        if success then
+                                            vim.notify("リネームしました: " .. item.name .. " → " .. input, vim.log.levels.INFO)
+                                        else
+                                            vim.notify("リネームに失敗しました", vim.log.levels.ERROR)
+                                        end
+                                    end
+                                    refresh_modal()
+                                end)
+                            end
+                        end
+
+                        -- 数字キーでファイル/ディレクトリを開く
+                        for i = 1, math.min(#all_items, 9) do
+                            vim.keymap.set("n", tostring(i), function()
+                                open_item(i)
+                            end, { buffer = buf, nowait = true })
                         end
 
                         -- その他のキーマッピング
@@ -135,6 +228,13 @@ return {
                             end
                         end, { buffer = buf, nowait = true })
 
+                        -- ファイル操作
+                        vim.keymap.set("n", "A", create_directory, { buffer = buf, nowait = true })
+                        vim.keymap.set("n", "a", create_file, { buffer = buf, nowait = true })
+                        vim.keymap.set("n", "d", delete_item, { buffer = buf, nowait = true })
+                        vim.keymap.set("n", "r", rename_item, { buffer = buf, nowait = true })
+
+                        -- ナビゲーション
                         vim.keymap.set("n", "q", close_modal, { buffer = buf, nowait = true })
                         vim.keymap.set("n", "<Esc>", close_modal, { buffer = buf, nowait = true })
 
@@ -151,7 +251,7 @@ return {
                             end, 50)
                         end, { buffer = buf, nowait = true })
 
-                        -- カーソル移動でハイライト
+                        -- カーソル移動
                         vim.keymap.set("n", "j", function()
                             local current_line = vim.api.nvim_win_get_cursor(win)[1]
                             local max_line = #content
