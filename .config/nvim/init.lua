@@ -97,10 +97,10 @@ require("lazy").setup({
 local keymap = vim.keymap.set
 
 -- 一般的なキーマップ
-keymap("n", "<C-h>", "<C-w>h", { desc = "左のウィンドウに移動" })
-keymap("n", "<C-j>", "<C-w>j", { desc = "下のウィンドウに移動" })
-keymap("n", "<C-k>", "<C-w>k", { desc = "上のウィンドウに移動" })
-keymap("n", "<C-l>", "<C-w>l", { desc = "右のウィンドウに移動" })
+keymap("n", "sh", "<C-w>h", { desc = "左のウィンドウに移動" })
+keymap("n", "sj", "<C-w>j", { desc = "下のウィンドウに移動" })
+keymap("n", "sk", "<C-w>k", { desc = "上のウィンドウに移動" })
+keymap("n", "sl", "<C-w>l", { desc = "右のウィンドウに移動" })
 
 -- 検索結果のハイライトを消去
 keymap("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "検索ハイライトを消去" })
