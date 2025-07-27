@@ -2,8 +2,17 @@
 -- Neovim 基本設定
 -- =============================================
 
+-- vscodeではリーダーキーを設定しない
+if vim.g.vscode then
+    vim.g.mapleader = "<nop>"
+
+    vim.keymap.set("v", "<", "<gv", { noremap = true, silent = true })
+    vim.keymap.set("v", ">", ">gv", { noremap = true, silent = true })
+else
+    vim.g.mapleader = " "
+end
+
 -- リーダーキーの設定（lazy.nvimより先に設定する必要がある）
-vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 -- 基本設定
@@ -106,6 +115,9 @@ keymap("v", "K", ":m '<-2<CR>gv=gv", { desc = "選択した行を上に移動" }
 -- 中央に保持しながらのページ移動
 keymap("n", "<C-d>", "<C-d>zz", { desc = "半ページ下に移動して中央に" })
 keymap("n", "<C-u>", "<C-u>zz", { desc = "半ページ上に移動して中央に" })
+
+-- normalモードに戻る
+keymap("i", "jj", "<Esc>", { desc = "jjでnormalモードに戻る" })
 
 -- =============================================
 -- 自動コマンド
