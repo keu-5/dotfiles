@@ -48,11 +48,12 @@ opt.undofile = true     -- アンドゥファイルを有効
 opt.updatetime = 50     -- 更新間隔を短縮
 
 -- その他
-opt.termguicolors = true      -- True colorを有効
-opt.mouse = "a"               -- マウスサポートを有効
-opt.clipboard = "unnamedplus" -- システムクリップボードを使用
-opt.splitbelow = true         -- 新しいウィンドウを下に分割
-opt.splitright = true         -- 新しいウィンドウを右に分割
+opt.guifont = "Hack Nerd Font Mono" -- フォント設定
+opt.termguicolors = true            -- True colorを有効
+opt.mouse = "a"                     -- マウスサポートを有効
+opt.clipboard = "unnamedplus"       -- システムクリップボードを使用
+opt.splitbelow = true               -- 新しいウィンドウを下に分割
+opt.splitright = true               -- 新しいウィンドウを右に分割
 
 -- =============================================
 -- lazy.nvim のブートストラップ

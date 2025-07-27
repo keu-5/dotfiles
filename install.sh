@@ -17,6 +17,7 @@ ln -sfn "$DOTFILES_DIR/.zshrc" ~/.zshrc
 
 # 必須ツールのインストール
 brew install zsh-autosuggestions zsh-completions python@3.13 nodebrew || true
+brew install --cask font-hack-nerd-font
 
 # zsh 再起動で設定を反映
 echo "🚀 設定を反映するため zsh を再起動します..."
