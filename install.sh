@@ -44,17 +44,18 @@ if [[ ! -x "$0" ]]; then
   exit 1
 fi
 
-log_section "Homebrew 確認"
+log_section "前提条件の確認"
 if ! command -v brew &>/dev/null; then
   log_error "Homebrew が見つかりません。"
-  log_info "https://brew.sh を参照してインストールしてください。"
+  log_info "先に setup-homebrew.sh を実行してください："
+  echo -e "${YELLOW}   ./setup-homebrew.sh${NC}"
   exit 1
 fi
 log_success "Homebrew が見つかりました"
 
-log_section "VS Code のインストール確認"
+# VS Code の確認（Homebrewでインストールされていない場合のみインストール）
 if ! command -v code &>/dev/null; then
-  log_info "Visual Studio Code をインストールしています..."
+  log_warning "VS Code が見つかりません。Homebrew経由でインストールします..."
   brew install --cask visual-studio-code
   
   # VS Code の code コマンドを PATH に追加
@@ -131,13 +132,6 @@ if [ -d "$VSCODE_USER_DIR/snippets" ] || [ -L "$VSCODE_USER_DIR/snippets" ]; the
 fi
 ln -snf "$DOTFILES_DIR/vscode/snippets" "$VSCODE_USER_DIR/snippets"
 log_success "snippets ディレクトリのリンクを作成しました"
-
-log_section "必須ツールのインストール"
-log_info "Homebrew 経由で必須ツールをインストールしています..."
-brew install zsh-autosuggestions zsh-completions python@3.13 nodebrew neovim || true
-log_info "フォントをインストールしています..."
-brew install --cask font-hack-nerd-font
-log_success "必須ツールのインストールが完了しました"
 
 log_section "VS Code 拡張機能のインストール"
 if [ -f "$DOTFILES_DIR/vscode/extensions.txt" ]; then
