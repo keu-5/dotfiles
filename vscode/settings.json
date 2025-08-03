@@ -1,0 +1,101 @@
+{
+  // github
+  "github.copilot.nextEditSuggestions.enabled": true,
+  
+  // python
+  "workbench.iconTheme": "material-icon-theme",
+  "python.languageServer": "Pylance",
+  "python.analysis.typeCheckingMode": "standard",
+
+  // markdown
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  
+  // prettier
+  "prettier.enableDebugLogs": false,
+  "editor.formatOnSave": true,
+  "extensions.experimental.affinity": {
+    "asvetliakov.vscode-neovim": 1
+  },
+
+  // neovim
+  "vscode-neovim.compositeKeys": {
+    "jj": {
+      "command": "vscode-neovim.escape"
+    }
+  },
+  "keyboard.dispatch": "keyCode",
+  "editor.fontFamily": "Hack Nerd Font Mono",
+
+  // latex
+  "[tex]": {
+      "editor.suggest.snippetsPreventQuickSuggestions": false,
+      "editor.tabSize": 2,
+      "editor.formatOnSave": true
+  },
+
+  "[latex]": {
+      "editor.suggest.snippetsPreventQuickSuggestions": false,
+      "editor.tabSize": 2,
+      "editor.formatOnSave": true
+  },
+
+  "[bibtex]": {
+      "editor.tabSize": 2
+  },
+  
+  "latex-workshop.intellisense.package.enabled": true,
+
+  "latex-workshop.latex.clean.fileTypes": [
+      "*.aux",
+      "*.bbl",
+      "*.blg",
+      "*.idx",
+      "*.ind",
+      "*.lof",
+      "*.lot",
+      "*.out",
+      "*.toc",
+      "*.acn",
+      "*.acr",
+      "*.alg",
+      "*.glg",
+      "*.glo",
+      "*.gls",
+      "*.ist",
+      "*.fls",
+      "*.log",
+      "*.fdb_latexmk",
+      "*.snm",
+      "*.nav",
+      "*.dvi",
+      "*.synctex.gz"
+  ],
+
+  "latex-workshop.latex.outDir": "out",
+
+  "latex-workshop.latex.recipes": [
+      {
+          "name": "latexmk",
+          "tools": [
+              "latexmk"
+          ]
+      },
+  ],
+
+  "latex-workshop.latex.tools": [
+      {
+          "name": "latexmk",
+          "command": "latexmk",
+          "args": [
+              "-silent",
+              "-outdir=%OUTDIR%",
+              "%DOC%"
+          ],
+      },
+  ],
+
+  "latex-workshop.formatting.latexindent.path": "latexindent"
+}
