@@ -7,7 +7,7 @@ Neovim、zsh などの設定を含みます。
 
 | ツール   | 設定ファイル／ディレクトリ | セットアップスクリプト |
 | -------- | -------------------------- | ---------------------- |
-| Homebrew | -                          | `setup-homebrew.sh`    |
+| Homebrew | `homebrew/`                | `homebrew/setup.sh`    |
 | Neovim   | `.config/nvim/`            | `install.sh`           |
 | zsh      | `.zshrc`                   | `install.sh`           |
 | VS Code  | `vscode/`                  | `install.sh`           |
@@ -23,7 +23,7 @@ git clone https://github.com/yourname/dotfiles.git
 cd dotfiles
 
 # 1. Homebrew と必須ツールのセットアップ
-chmod +x setup-homebrew.sh && ./setup-homebrew.sh
+chmod +x homebrew/setup.sh && ./homebrew/setup.sh
 
 # 2. 基本的な開発環境のセットアップ
 chmod +x install.sh && ./install.sh
@@ -46,21 +46,22 @@ LaTeX 関連の設定（`.latexmkrc`）は`setup-latex.sh`で別途処理され�
 
 ### フォントの設定
 
-`setup-homebrew.sh`でフォントがインストールされます。`Hack Nerd Font Mono`または`Fira Code`を設定してください
+`homebrew/setup.sh`でフォントがインストールされます。`Hack Nerd Font Mono`または`Fira Code`を設定してください
 
 ## ✅ 各スクリプトでインストールされるもの
 
-### setup-homebrew.sh
+### homebrew/setup.sh
 
-- **基本ツール**: zsh-autosuggestions, zsh-completions, python@3.13, nodebrew, neovim, git
+- **基本ツール**: git, zsh-autosuggestions, zsh-completions, python@3.13, nodebrew, neovim
 - **フォント**: Hack Nerd Font, Fira Code
-- **追加ツール**: tree, wget, curl, jq, ripgrep, fd, bat, exa
+- **VS Code 拡張機能**: Brewfile で定義されたすべての拡張機能
+- **追加ツール**: tree, docker, mysql, graphviz など
 
 ### install.sh
 
 - VS Code（未インストールの場合）
-- VS Code 拡張機能
 - 設定ファイルのシンボリックリンク
+- VS Code 設定ファイルのリンク
 
 ### setup-latex.sh
 
@@ -134,6 +135,21 @@ ls -l ~/.config/nvim
 あるいは
 
 readlink ~/.zshrc
+```
+
+## 🔧 パッケージ管理
+
+Homebrew のパッケージ管理には以下のコマンドが便利です：
+
+```bash
+# 現在インストール済みのパッケージをBrewfileに保存
+brew bundle dump --file=homebrew/Brewfile --force
+
+# Brewfileからパッケージを一括インストール
+brew bundle install --file=homebrew/Brewfile
+
+# Brewfileで管理されていないパッケージをクリーンアップ
+brew bundle cleanup --file=homebrew/Brewfile
 ```
 
 ---

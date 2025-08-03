@@ -33,10 +33,14 @@ log_section() {
 
 echo -e "${CYAN}🍺 Homebrew セットアップを開始します${NC}"
 
+# スクリプト自身のディレクトリを基準にする
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BREWFILE_PATH="$SCRIPT_DIR/Brewfile"
+
 # スクリプト自体の実行権限を確認
 if [[ ! -x "$0" ]]; then
   log_error "このスクリプトに実行権限がありません。"
-  log_info "実行権限を付与してから再実行してください: chmod +x setup-homebrew.sh"
+  log_info "実行権限を付与してから再実行してください: chmod +x homebrew/setup.sh"
   exit 1
 fi
 
@@ -83,27 +87,38 @@ else
   log_warning "Homebrew の更新でエラーが発生しましたが、続行します"
 fi
 
-log_section "必須ツールのインストール"
-log_info "開発に必要なツールをインストールしています..."
-
-# 基本ツール
-tools_to_install=(
-  "zsh-autosuggestions"
-  "zsh-completions" 
-  "python@3.13"
-  "nodebrew"
-  "neovim"
-  "git"
-)
-
-for tool in "${tools_to_install[@]}"; do
-  log_info "$tool をインストール中..."
-  if brew install "$tool" >/dev/null 2>&1; then
-    log_success "$tool をインストールしました"
+log_section "パッケージとツールのインストール"
+if [[ -f "$BREWFILE_PATH" ]]; then
+  log_info "Brewfile を使用してパッケージをインストールしています..."
+  log_info "Brewfile パス: $BREWFILE_PATH"
+  
+  if brew bundle install --file="$BREWFILE_PATH" >/dev/null 2>&1; then
+    log_success "Brewfile からのパッケージインストールが完了しました"
   else
-    log_warning "$tool のインストールでエラーが発生しました（既にインストール済みの可能性があります）"
+    log_warning "Brewfile でのインストール中に一部エラーが発生しました"
   fi
-done
+else
+  log_warning "Brewfile が見つかりません。手動でツールをインストールします..."
+  
+  # 基本ツール（Brewfileがない場合のフォールバック）
+  tools_to_install=(
+    "zsh-autosuggestions"
+    "zsh-completions" 
+    "python@3.13"
+    "nodebrew"
+    "neovim"
+    "git"
+  )
+
+  for tool in "${tools_to_install[@]}"; do
+    log_info "$tool をインストール中..."
+    if brew install "$tool" >/dev/null 2>&1; then
+      log_success "$tool をインストールしました"
+    else
+      log_warning "$tool のインストールでエラーが発生しました（既にインストール済みの可能性があります）"
+    fi
+  done
+fi
 
 log_section "フォントのインストール"
 log_info "開発用フォントをインストールしています..."
@@ -122,37 +137,17 @@ for font in "${fonts_to_install[@]}"; do
   fi
 done
 
-log_section "追加の開発ツール（オプション）"
-log_info "追加の開発ツールをインストールしています..."
-
-optional_tools=(
-  "tree"
-  "wget"
-  "curl"
-  "jq"
-  "ripgrep"
-  "fd"
-  "bat"
-  "exa"
-)
-
-for tool in "${optional_tools[@]}"; do
-  log_info "$tool をインストール中..."
-  if brew install "$tool" >/dev/null 2>&1; then
-    log_success "$tool をインストールしました"
-  else
-    log_warning "$tool のインストールでエラーが発生しました"
-  fi
-done
-
 log_section "Homebrew セットアップ完了"
 echo -e "${CYAN}🎉 Homebrew セットアップが完了しました！${NC}"
 echo ""
-echo -e "${GREEN}📦 インストールされたツール：${NC}"
-echo -e "${BLUE}   基本ツール：${NC} zsh-autosuggestions, zsh-completions, python@3.13, nodebrew, neovim, git"
+echo -e "${GREEN}📦 インストールされたもの：${NC}"
+echo -e "${BLUE}   パッケージ：${NC} Brewfile で定義されたすべてのパッケージ"
 echo -e "${BLUE}   フォント：${NC} Hack Nerd Font, Fira Code"
-echo -e "${BLUE}   追加ツール：${NC} tree, wget, curl, jq, ripgrep, fd, bat, exa"
 echo ""
 echo -e "${GREEN}💡 次のステップ：${NC}"
 echo -e "${BLUE}   ./install.sh${NC} - 基本的な開発環境のセットアップ"
 echo -e "${BLUE}   ./setup-latex.sh${NC} - LaTeX環境のセットアップ（必要に応じて）"
+echo ""
+echo -e "${GREEN}🔧 パッケージ管理：${NC}"
+echo -e "${BLUE}   brew bundle dump --file=homebrew/Brewfile --force${NC} - 現在のパッケージをBrewfileに保存"
+echo -e "${BLUE}   brew bundle install --file=homebrew/Brewfile${NC} - Brewfileからパッケージを再インストール"

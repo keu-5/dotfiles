@@ -47,8 +47,8 @@ fi
 log_section "前提条件の確認"
 if ! command -v brew &>/dev/null; then
   log_error "Homebrew が見つかりません。"
-  log_info "先に setup-homebrew.sh を実行してください："
-  echo -e "${YELLOW}   ./setup-homebrew.sh${NC}"
+  log_info "先に homebrew/setup.sh を実行してください："
+  echo -e "${YELLOW}   ./homebrew/setup.sh${NC}"
   exit 1
 fi
 log_success "Homebrew が見つかりました"
@@ -133,46 +133,15 @@ fi
 ln -snf "$DOTFILES_DIR/vscode/snippets" "$VSCODE_USER_DIR/snippets"
 log_success "snippets ディレクトリのリンクを作成しました"
 
-log_section "VS Code 拡張機能のインストール"
-if [ -f "$DOTFILES_DIR/vscode/extensions.txt" ]; then
-  extension_count=0
-  failed_extensions=()
-  
-  log_info "拡張機能リストを読み込んでいます..."
-  
-  while IFS= read -r extension; do
-    # 空行やコメント行をスキップ
-    if [[ -n "$extension" && ! "$extension" =~ ^[[:space:]]*# ]]; then
-      log_info "拡張機能をインストール中: $extension"
-      if code --install-extension "$extension" >/dev/null 2>&1; then
-        ((extension_count++))
-        log_success "$extension をインストールしました"
-      else
-        failed_extensions+=("$extension")
-        log_error "$extension のインストールに失敗しました"
-      fi
-    fi
-  done < "$DOTFILES_DIR/vscode/extensions.txt"
-  
-  echo ""
-  log_section "拡張機能インストール結果"
-  log_success "正常にインストールされた拡張機能: $extension_count 個"
-  if [ ${#failed_extensions[@]} -gt 0 ]; then
-    log_error "インストールに失敗した拡張機能: ${#failed_extensions[@]} 個"
-    for ext in "${failed_extensions[@]}"; do
-      echo -e "   ${RED}・${NC} $ext"
-    done
-  fi
-else
-  log_warning "extensions.txt が見つかりません: $DOTFILES_DIR/vscode/"
-fi
-
 echo ""
 log_section "セットアップ完了"
-log_success "VS Code セットアップが完了しました！"
+log_success "開発環境セットアップが完了しました！"
 echo -e "${GREEN}   ✓${NC} 設定ファイル、キーバインド、スニペットがリンクされました"
-echo -e "${GREEN}   ✓${NC} 拡張機能がインストールされました"
+echo -e "${GREEN}   ✓${NC} VS Code の設定が完了しました"
 echo -e "${GREEN}   ✓${NC} Neovim 統合の準備が完了しました"
+echo ""
+log_info "VS Code拡張機能は homebrew/Brewfile で管理されています"
+echo -e "${BLUE}   brew bundle install --file=homebrew/Brewfile${NC} - 拡張機能を含むすべてのパッケージを再インストール"
 
 # zsh 再起動で設定を反映
 echo ""
