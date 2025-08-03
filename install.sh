@@ -14,6 +14,7 @@ fi
 # dotfiles のシンボリックリンク作成
 ln -sfn "$DOTFILES_DIR/.config/nvim" ~/.config/nvim
 ln -sfn "$DOTFILES_DIR/.zshrc" ~/.zshrc
+ln -sfn "$DOTFILES_DIR/.latexmkrc " ~/.latexmkrc
 
 # 必須ツールのインストール
 brew install zsh-autosuggestions zsh-completions python@3.13 nodebrew || true
