@@ -1,16 +1,27 @@
 # dotfiles
 
-このリポジトリは、自分の開発環境の設定ファイル（dotfiles）をまとめて管理するためのものです。  
-Neovim、zsh などの設定を含みます。
+このリポジトリは、自分の開発環境の設定ファ基本セットアップ（`install.sh`）により、各設定ファイルが以下のように **シンボリックリンクで配置**されます：
+
+```txt
+~/.config/nvim        → dotfiles/.config/nvim
+~/.zshrc              → dotfiles/.zshrc
+```
+
+LaTeX 関連の設定（`.latexmkrc`）は`setup-latex.sh`で別途処理されます。
+
+> ※ すでにリンク先が存在する場合は、タイムスタンプ付きでバックアップされます  
+> ※ スクリプトは実行権限の確認を自動で行います les）をまとめて管理するためのものです。  
+> Neovim、zsh などの設定を含みます。
 
 ## 📦 管理している主なファイル・ディレクトリ
 
-| ツール | 設定ファイル／ディレクトリ        |
-| ------ | --------------------------------- |
-| Neovim | `.config/nvim/`                   |
-| zsh    | `.zshrc`                          |
-| LaTeX  | `.config/nvim/`（LaTeX 設定含む） |
-| その他 | 必要に応じて追加                  |
+| ツール  | 設定ファイル／ディレクトリ | セットアップスクリプト |
+| ------- | -------------------------- | ---------------------- |
+| Neovim  | `.config/nvim/`            | `install.sh`           |
+| zsh     | `.zshrc`                   | `install.sh`           |
+| VS Code | `vscode/`                  | `install.sh`           |
+| LaTeX   | `.latexmkrc`               | `setup-latex.sh`       |
+| その他  | 必要に応じて追加           | -                      |
 
 ## 🛠️ セットアップ方法
 
@@ -23,15 +34,21 @@ git clone https://github.com/yourname/dotfiles.git
 
 cd 任意の場所
 
+# 基本的な開発環境のセットアップ
 chmod +x install.sh && ./install.sh
+
+# LaTeX環境のセットアップ（必要に応じて）
+chmod +x setup-latex.sh && ./setup-latex.sh
 ```
 
-このコマンドにより、各設定ファイルが以下のように **シンボリックリンクで配置**されます：
+基本セットアップ（`install.sh`）により、各設定ファイルが以下のように **シンボリックリンクで配置**されます：
 
 ```txt
 ~/.config/nvim        → dotfiles/.config/nvim
 ~/.zshrc              → dotfiles/.zshrc
 ```
+
+LaTeX 関連の設定（`.latexmkrc`）は`setup-latex.sh`で別途処理されます。
 
 > ※ すでにリンク先が存在する場合は上書きされます（安全のため事前にバックアップを推奨）
 
@@ -48,7 +65,22 @@ chmod +x install.sh && ./install.sh
 
 ## 📄 LaTeX 設定
 
-LaTeX の設定は Neovim の設定に含まれています。以下のキーバインドが利用可能です：
+LaTeX の設定は Neovim の設定に含まれています。また、LaTeX 環境の詳細なセットアップ用に専用のスクリプトを用意しています。
+
+### LaTeX 環境のセットアップ
+
+```bash
+# LaTeX環境の詳細セットアップ（MacTeX必須）
+./setup-latex.sh
+```
+
+このスクリプトは以下を実行します：
+
+- MacTeX のインストール確認
+- tlmgr とパッケージの更新
+- 用紙サイズの A4 設定
+- 必要な Perl モジュール（File::HomeDir, YAML::Tiny）のインストール
+- .latexmkrc の設定確認
 
 ### キーバインド
 
@@ -63,7 +95,8 @@ LaTeX を使用するには以下がインストールされている必要が�
 
 ```bash
 # MacTeX のインストール（推奨）
-brew install --cask mactex
+# 以下のURLから直接ダウンロードしてインストール：
+# https://tug.org/mactex/mactex-download.html
 
 # または BasicTeX + 必要なパッケージ
 brew install --cask basictex

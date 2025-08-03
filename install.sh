@@ -6,6 +6,13 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "Using dotfiles directory: $DOTFILES_DIR"
 
+# スクリプト自体の実行権限を確認
+if [[ ! -x "$0" ]]; then
+  echo "Warning: このスクリプトに実行権限がありません。"
+  echo "実行権限を付与してから再実行してください: chmod +x install.sh"
+  exit 1
+fi
+
 # Homebrew 確認
 if ! command -v brew &>/dev/null; then
   echo "Homebrew が見つかりません。https://brew.sh を参照してインストールしてください。"
@@ -31,15 +38,29 @@ if ! command -v code &>/dev/null; then
 fi
 
 # dotfiles のシンボリックリンク作成
+echo "Creating symbolic links for dotfiles..."
+
+# .config/nvim のリンク作成
+if [[ -e ~/.config/nvim ]] && [[ ! -L ~/.config/nvim ]]; then
+  echo "Warning: ~/.config/nvim already exists and is not a symlink. Creating backup..."
+  mv ~/.config/nvim ~/.config/nvim.backup.$(date +%Y%m%d_%H%M%S)
+fi
 ln -sfn "$DOTFILES_DIR/.config/nvim" ~/.config/nvim
+
+# .zshrc のリンク作成
+if [[ -e ~/.zshrc ]] && [[ ! -L ~/.zshrc ]]; then
+  echo "Warning: ~/.zshrc already exists and is not a symlink. Creating backup..."
+  mv ~/.zshrc ~/.zshrc.backup.$(date +%Y%m%d_%H%M%S)
+fi
 ln -sfn "$DOTFILES_DIR/.zshrc" ~/.zshrc
-ln -sfn "$DOTFILES_DIR/.latexmkrc " ~/.latexmkrc
 
 # VS Code 設定ファイルのリンク
 echo "Linking VS Code settings..."
 VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
 
+# VS Code設定ディレクトリを適切な権限で作成
 mkdir -p "$VSCODE_USER_DIR"
+chmod 755 "$VSCODE_USER_DIR"
 
 # 既存のsettings.jsonを削除してからリンクを作成
 if [ -f "$VSCODE_USER_DIR/settings.json" ] || [ -L "$VSCODE_USER_DIR/settings.json" ]; then
