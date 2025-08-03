@@ -53,19 +53,20 @@ Brewfile には以下が含まれています：
 ### Fonts
 
 - Hack Nerd Font
-- Fira Code
 
-### VS Code Extensions
+## VS Code 拡張機能について
 
-- Core extensions (Copilot, Neovim integration)
-- Language support (Python, LaTeX, Web development)
-- Themes and utilities
+VS Code 拡張機能の管理は `vscode-manager/` ディレクトリに移動しました。
+
+- 拡張機能リスト: `vscode-manager/extensions.txt`
+- Homebrew用定義: `vscode-manager/Brewfile.vscode`
+- セットアップ: `vscode-manager/setup-vscode.sh`
 
 ## カスタマイズ
 
-新しいパッケージや VS Code 拡張機能を追加したい場合は、Brewfile を直接編集するか、以下のコマンドで現在の環境から自動生成できます：
+新しいパッケージを追加したい場合は、Brewfile を直接編集するか、以下のコマンドで現在の環境から自動生成できます：
 
 ```bash
-# 現在の環境をBrewfileに反映
+# 現在の環境をBrewfileに反映（VS Code拡張機能は除く）
 brew bundle dump --file=homebrew/Brewfile --force
 ```

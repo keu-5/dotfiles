@@ -53,28 +53,6 @@ if ! command -v brew &>/dev/null; then
 fi
 log_success "Homebrew が見つかりました"
 
-# VS Code の確認（Homebrewでインストールされていない場合のみインストール）
-if ! command -v code &>/dev/null; then
-  log_warning "VS Code が見つかりません。Homebrew経由でインストールします..."
-  brew install --cask visual-studio-code
-  
-  # VS Code の code コマンドを PATH に追加
-  log_info "VS Code コマンドラインツールをセットアップしています..."
-  if [[ ":$PATH:" != *":/Applications/Visual Studio Code.app/Contents/Resources/app/bin:"* ]]; then
-    export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
-  fi
-  
-  # VS Code が正常にインストールされたか確認
-  if ! command -v code &>/dev/null; then
-    log_warning "VS Code コマンドラインツールの手動セットアップが必要な可能性があります。"
-    log_info "確認してください: 'code --version'"
-  else
-    log_success "VS Code のインストールが完了しました"
-  fi
-else
-  log_success "VS Code は既にインストールされています"
-fi
-
 log_section "Dotfiles シンボリックリンク作成"
 
 # .config/nvim のリンク作成
@@ -97,51 +75,15 @@ fi
 ln -sfn "$DOTFILES_DIR/.zshrc" ~/.zshrc
 log_success "~/.zshrc のリンクを作成しました"
 
-log_section "VS Code 設定ファイルのリンク"
-VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
-
-# VS Code設定ディレクトリを適切な権限で作成
-log_info "VS Code 設定ディレクトリを作成しています..."
-mkdir -p "$VSCODE_USER_DIR"
-chmod 755 "$VSCODE_USER_DIR"
-log_success "VS Code 設定ディレクトリを作成しました"
-
-# 既存のsettings.jsonを削除してからリンクを作成
-log_info "settings.json のリンクを作成しています..."
-if [ -f "$VSCODE_USER_DIR/settings.json" ] || [ -L "$VSCODE_USER_DIR/settings.json" ]; then
-  log_warning "既存の settings.json を削除しています..."
-  rm -f "$VSCODE_USER_DIR/settings.json"
-fi
-ln -sf "$DOTFILES_DIR/vscode/settings.json" "$VSCODE_USER_DIR/settings.json"
-log_success "settings.json のリンクを作成しました"
-
-# 既存のkeybindings.jsonを削除してからリンクを作成
-log_info "keybindings.json のリンクを作成しています..."
-if [ -f "$VSCODE_USER_DIR/keybindings.json" ] || [ -L "$VSCODE_USER_DIR/keybindings.json" ]; then
-  log_warning "既存の keybindings.json を削除しています..."
-  rm -f "$VSCODE_USER_DIR/keybindings.json"
-fi
-ln -sf "$DOTFILES_DIR/vscode/keybindings.json" "$VSCODE_USER_DIR/keybindings.json"
-log_success "keybindings.json のリンクを作成しました"
-
-# 既存のsnippetsディレクトリを削除してからリンクを作成
-log_info "snippets ディレクトリのリンクを作成しています..."
-if [ -d "$VSCODE_USER_DIR/snippets" ] || [ -L "$VSCODE_USER_DIR/snippets" ]; then
-  log_warning "既存の snippets ディレクトリを削除しています..."
-  rm -rf "$VSCODE_USER_DIR/snippets"
-fi
-ln -snf "$DOTFILES_DIR/vscode/snippets" "$VSCODE_USER_DIR/snippets"
-log_success "snippets ディレクトリのリンクを作成しました"
-
 echo ""
 log_section "セットアップ完了"
 log_success "開発環境セットアップが完了しました！"
-echo -e "${GREEN}   ✓${NC} 設定ファイル、キーバインド、スニペットがリンクされました"
-echo -e "${GREEN}   ✓${NC} VS Code の設定が完了しました"
+echo -e "${GREEN}   ✓${NC} 設定ファイルがリンクされました"
 echo -e "${GREEN}   ✓${NC} Neovim 統合の準備が完了しました"
 echo ""
-log_info "VS Code拡張機能は homebrew/Brewfile で管理されています"
-echo -e "${BLUE}   brew bundle install --file=homebrew/Brewfile${NC} - 拡張機能を含むすべてのパッケージを再インストール"
+log_info "追加の環境セットアップ："
+echo -e "${BLUE}   ./vscode-manager/setup-vscode.sh${NC} - VS Code環境のセットアップ"
+echo -e "${BLUE}   ./latex/setup-latex.sh${NC}           - LaTeX環境のセットアップ"
 
 # zsh 再起動で設定を反映
 echo ""
