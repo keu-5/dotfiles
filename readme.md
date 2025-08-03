@@ -8,7 +8,7 @@ Neovim、zsh などの設定を含みます。
 | ツール   | 設定ファイル／ディレクトリ | セットアップスクリプト           |
 | -------- | -------------------------- | -------------------------------- |
 | Homebrew | `homebrew/`                | `homebrew/setup.sh`              |
-| Neovim   | `.config/nvim/`            | `install.sh`                     |
+| Neovim   | `.config/nvim/`            | `nvim-manager/setup-nvim.sh`     |
 | zsh      | `.zshrc`                   | `install.sh`                     |
 | VS Code  | `vscode-manager/`          | `vscode-manager/setup-vscode.sh` |
 | LaTeX    | `latex/`                   | `latex/setup-latex.sh`           |
@@ -28,21 +28,29 @@ chmod +x validate.sh && ./validate.sh
 # 1. Homebrew と必須ツールのセットアップ
 chmod +x homebrew/setup.sh && ./homebrew/setup.sh
 
-# 2. 基本的な開発環境のセットアップ（Neovim、zsh）
+# 2. 基本的な開発環境のセットアップ（zsh）
 chmod +x install.sh && ./install.sh
 
-# 3. VS Code環境のセットアップ（必要に応じて）
+# 3. Neovim環境のセットアップ（必要に応じて）
+chmod +x nvim-manager/setup-nvim.sh && ./nvim-manager/setup-nvim.sh
+
+# 4. VS Code環境のセットアップ（必要に応じて）
 chmod +x vscode-manager/setup-vscode.sh && ./vscode-manager/setup-vscode.sh
 
-# 4. LaTeX環境のセットアップ（必要に応じて）
+# 5. LaTeX環境のセットアップ（必要に応じて）
 cd latex && chmod +x setup-latex.sh && ./setup-latex.sh && cd ..
 ```
 
-基本セットアップ（`install.sh`）により、各設定ファイルが以下のように **シンボリックリンクで配置**されます：
+基本セットアップ（`install.sh`）により、zsh 設定ファイルが **シンボリックリンクで配置**されます：
+
+```txt
+~/.zshrc              → dotfiles/.zshrc
+```
+
+Neovim 環境セットアップ（`nvim-manager/setup-nvim.sh`）により、Neovim 設定が配置されます：
 
 ```txt
 ~/.config/nvim        → dotfiles/.config/nvim
-~/.zshrc              → dotfiles/.zshrc
 ```
 
 LaTeX 関連の設定（`latex/`ディレクトリ）は`latex/setup-latex.sh`で別途処理されます。

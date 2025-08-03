@@ -55,16 +55,6 @@ log_success "Homebrew が見つかりました"
 
 log_section "Dotfiles シンボリックリンク作成"
 
-# .config/nvim のリンク作成
-log_info "~/.config/nvim のシンボリックリンクを作成しています..."
-if [[ -e ~/.config/nvim ]] && [[ ! -L ~/.config/nvim ]]; then
-  backup_name="~/.config/nvim.backup.$(date +%Y%m%d_%H%M%S)"
-  log_warning "~/.config/nvim が既に存在します。バックアップを作成します: $backup_name"
-  mv ~/.config/nvim ~/.config/nvim.backup.$(date +%Y%m%d_%H%M%S)
-fi
-ln -sfn "$DOTFILES_DIR/.config/nvim" ~/.config/nvim
-log_success "~/.config/nvim のリンクを作成しました"
-
 # .zshrc のリンク作成
 log_info "~/.zshrc のシンボリックリンクを作成しています..."
 if [[ -e ~/.zshrc ]] && [[ ! -L ~/.zshrc ]]; then
@@ -77,11 +67,11 @@ log_success "~/.zshrc のリンクを作成しました"
 
 echo ""
 log_section "セットアップ完了"
-log_success "開発環境セットアップが完了しました！"
+log_success "基本的な開発環境セットアップが完了しました！"
 echo -e "${GREEN}   ✓${NC} 設定ファイルがリンクされました"
-echo -e "${GREEN}   ✓${NC} Neovim 統合の準備が完了しました"
 echo ""
 log_info "追加の環境セットアップ："
+echo -e "${BLUE}   ./nvim-manager/setup-nvim.sh${NC}     - Neovim環境のセットアップ"
 echo -e "${BLUE}   ./vscode-manager/setup-vscode.sh${NC} - VS Code環境のセットアップ"
 echo -e "${BLUE}   ./latex/setup-latex.sh${NC}           - LaTeX環境のセットアップ"
 
