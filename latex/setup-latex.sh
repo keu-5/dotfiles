@@ -74,11 +74,18 @@ else
 fi
 
 log_section "tlmgr とパッケージの更新"
-log_info "tlmgr と全パッケージを更新しています（時間がかかる場合があります）..."
-if sudo tlmgr update --self --all >/dev/null 2>&1; then
-    log_success "tlmgr とパッケージの更新が完了しました"
+UPDATE_MARKER="$HOME/.tlmgr_updated"
+
+if [[ -f "$UPDATE_MARKER" ]]; then
+    log_info "tlmgr とパッケージの更新は既に実行済みです（$UPDATE_MARKER を削除すれば再実行します）"
 else
-    log_warning "tlmgr の更新で一部エラーが発生しましたが、続行します"
+    log_info "tlmgr と全パッケージを更新しています（時間がかかる場合があります）..."
+    if sudo tlmgr update --self --all >/dev/null 2>&1; then
+        log_success "tlmgr とパッケージの更新が完了しました"
+        date > "$UPDATE_MARKER"
+    else
+        log_warning "tlmgr の更新で一部エラーが発生しましたが、続行します"
+    fi
 fi
 
 log_section "用紙サイズ設定"
@@ -108,25 +115,27 @@ else
 fi
 
 log_section ".latexmkrc 設定確認"
-DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if [[ -f "$DOTFILES_DIR/.latexmkrc" ]]; then
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+LATEXRC_SRC="${LATEXRC_SRC:-"$SCRIPT_DIR/.latexmkrc"}"
+
+if [[ -f "$LATEXRC_SRC" ]]; then
     log_info ".latexmkrc の設定を確認しています..."
-    
-    # 既存の .latexmkrc があるかチェック
+
     if [[ -f "$HOME/.latexmkrc" ]] || [[ -L "$HOME/.latexmkrc" ]]; then
         log_warning "既存の .latexmkrc を更新しています..."
         rm -f "$HOME/.latexmkrc"
     fi
-    
-    # シンボリックリンクを作成
-    if ln -sf "$DOTFILES_DIR/.latexmkrc" "$HOME/.latexmkrc"; then
-        log_success ".latexmkrc をホームディレクトリにリンクしました"
+
+    if ln -sf "$LATEXRC_SRC" "$HOME/.latexmkrc"; then
+        log_success ".latexmkrc をホームディレクトリにリンクしました → $LATEXRC_SRC"
     else
         log_error ".latexmkrc のリンク作成でエラーが発生しました"
     fi
 else
-    log_error ".latexmkrc が dotfiles ディレクトリに見つかりません"
+    log_error ".latexmkrc が見つかりません: $LATEXRC_SRC"
+    log_info  "場所が違う場合は LATEXRC_SRC=/path/to/.latexmkrc として再実行してください"
 fi
 
 log_section "LaTeX 動作確認"

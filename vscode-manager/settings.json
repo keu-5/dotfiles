@@ -1,7 +1,7 @@
 {
   // github
   "github.copilot.nextEditSuggestions.enabled": true,
-  
+
   // python
   "workbench.iconTheme": "material-icon-theme",
   "python.languageServer": "Pylance",
@@ -12,7 +12,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true
   },
-  
+
   // prettier
   "prettier.enableDebugLogs": false,
   "editor.formatOnSave": true,
@@ -31,71 +31,71 @@
 
   // latex
   "[tex]": {
-      "editor.suggest.snippetsPreventQuickSuggestions": false,
-      "editor.tabSize": 2,
-      "editor.formatOnSave": true
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
   },
 
   "[latex]": {
-      "editor.suggest.snippetsPreventQuickSuggestions": false,
-      "editor.tabSize": 2,
-      "editor.formatOnSave": true
+    "editor.suggest.snippetsPreventQuickSuggestions": false,
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
   },
 
   "[bibtex]": {
-      "editor.tabSize": 2
+    "editor.tabSize": 2
   },
-  
+
   "latex-workshop.intellisense.package.enabled": true,
 
   "latex-workshop.latex.clean.fileTypes": [
-      "*.aux",
-      "*.bbl",
-      "*.blg",
-      "*.idx",
-      "*.ind",
-      "*.lof",
-      "*.lot",
-      "*.out",
-      "*.toc",
-      "*.acn",
-      "*.acr",
-      "*.alg",
-      "*.glg",
-      "*.glo",
-      "*.gls",
-      "*.ist",
-      "*.fls",
-      "*.log",
-      "*.fdb_latexmk",
-      "*.snm",
-      "*.nav",
-      "*.dvi",
-      "*.synctex.gz"
+    "*.aux",
+    "*.bbl",
+    "*.blg",
+    "*.idx",
+    "*.ind",
+    "*.lof",
+    "*.lot",
+    "*.out",
+    "*.toc",
+    "*.acn",
+    "*.acr",
+    "*.alg",
+    "*.glg",
+    "*.glo",
+    "*.gls",
+    "*.ist",
+    "*.fls",
+    "*.log",
+    "*.fdb_latexmk",
+    "*.snm",
+    "*.nav",
+    "*.dvi",
+    "*.synctex.gz"
   ],
 
   "latex-workshop.latex.outDir": "out",
 
   "latex-workshop.latex.recipes": [
-      {
-          "name": "latexmk",
-          "tools": [
-              "latexmk"
-          ]
-      },
+    {
+      "name": "latexmk",
+      "tools": ["latexmk"]
+    }
   ],
 
   "latex-workshop.latex.tools": [
-      {
-          "name": "latexmk",
-          "command": "latexmk",
-          "args": [
-              "-silent",
-              "-outdir=%OUTDIR%",
-              "%DOC%"
-          ],
-      },
+    {
+      "name": "latexmk",
+      "command": "latexmk",
+      "args": ["-silent", "-outdir=%OUTDIR%", "%DOC%"]
+    }
   ],
 
-  "latex-workshop.formatting.latexindent.path": "latexindent"
+  "latex-workshop.formatting.latexindent.path": "latexindent",
+  "redhat.telemetry.enabled": true,
+  "yaml.schemas": {
+    "/Users/cafe/.vscode/extensions/continue.continue-1.0.20-darwin-arm64/config-yaml-schema.json": [
+      ".continue/**/*.yaml"
+    ]
+  }
 }
