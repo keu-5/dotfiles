@@ -1,7 +1,9 @@
+anthropic.claude-code
 asvetliakov.vscode-neovim
 atommaterial.a-file-icon-vscode
 batisteo.vscode-django
 beardedbear.beardedtheme
+bierner.markdown-mermaid
 bradlc.vscode-tailwindcss
 davidanson.vscode-markdownlint
 dbaeumer.vscode-eslint
@@ -9,6 +11,8 @@ ecmel.vscode-html-css
 esbenp.prettier-vscode
 github.copilot
 github.copilot-chat
+graphql.vscode-graphql
+graphql.vscode-graphql-syntax
 james-yu.latex-workshop
 mechatroner.rainbow-csv
 mhutchie.git-graph
@@ -25,6 +29,10 @@ ms-toolsai.vscode-jupyter-cell-tags
 ms-toolsai.vscode-jupyter-slideshow
 openai.chatgpt
 pkief.material-icon-theme
+prisma.prisma
+qwtel.sqlite-viewer
+redhat.vscode-yaml
 streetsidesoftware.code-spell-checker
 sumneko.lua
 thang-nm.catppuccin-perfect-icons
+yzane.markdown-pdf
