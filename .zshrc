@@ -22,9 +22,21 @@ export PATH=$HOME/.nodebrew/current/bin:$PATH
 export PATH="/opt/homebrew/opt/python@3.13/libexec/bin:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 
+# Go
+export GOPATH=$(go env GOPATH)
+export PATH="$GOPATH/bin:$PATH"
+
 eval "$(rbenv init -)"
 
 export LDFLAGS="-L/opt/homebrew/lib"
 export CPPFLAGS="-I/opt/homebrew/include"
 
 export PATH="/usr/local/texlive/2025/bin/universal-darwin:$PATH"
+
+# pnpm
+export PNPM_HOME="/Users/cafe/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end

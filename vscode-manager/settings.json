@@ -20,6 +20,13 @@
     "asvetliakov.vscode-neovim": 1
   },
 
+  // go
+  "go.goroot": "/opt/homebrew/Cellar/go/1.25.1/libexec",
+  "go.gopath": "/Users/cafe/go",
+  "go.toolsEnvVars": {
+    "PATH": "/opt/homebrew/bin:${env:PATH}"
+  },
+
   // neovim
   "vscode-neovim.compositeKeys": {
     "jj": {
@@ -114,5 +121,26 @@
   },
   "latex-workshop.formatting.latex": "latexindent",
   "markdown.preview.breaks": true,
-  "markdown-pdf.breaks": true
+  "markdown-pdf.breaks": true,
+  "git.suggestSmartCommit": false,
+  "makefile.configureOnOpen": true,
+  "git.ignoreRebaseWarning": true,
+  "[dockercompose]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.autoIndent": "advanced",
+    "editor.quickSuggestions": {
+      "other": true,
+      "comments": false,
+      "strings": true
+    },
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "redhat.vscode-yaml"
+  },
+  "git.openRepositoryInParentFolders": "never",
+
+  "markdown.marp.html": "all",
+  "database-client.autoSync": true
 }
