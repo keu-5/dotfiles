@@ -6,9 +6,10 @@ return {
         priority = 100, -- LSPより高い優先度
         event = "InsertEnter",
         dependencies = {
-            -- スニペットエンジン
+            -- スニペットエンジン（必ず最初に読み込む）
             {
                 "L3MON4D3/LuaSnip",
+                version = "v2.*", -- 安定版のバージョン2系を使用
                 build = (function()
                     -- Build Step is needed for regex support in snippets
                     -- This step is not supported in many windows environments
@@ -28,7 +29,11 @@ return {
                     },
                 },
             },
-            "saadparwaiz1/cmp_luasnip", -- LuaSnip integration
+            -- LuaSnip統合（LuaSnipの後に読み込む）
+            {
+                "saadparwaiz1/cmp_luasnip",
+                dependencies = { "L3MON4D3/LuaSnip" },
+            },
 
             -- 補完ソース
             "hrsh7th/cmp-buffer",
@@ -37,8 +42,19 @@ return {
             -- 注意: cmp-nvim-lspはlsp.luaで依存関係として管理
         },
         config = function()
-            local cmp = require("cmp")
-            local luasnip = require("luasnip")
+            -- LuaSnipとcmpの読み込みをエラーハンドリング
+            local has_luasnip, luasnip = pcall(require, "luasnip")
+            if not has_luasnip then
+                vim.notify("LuaSnip not loaded", vim.log.levels.ERROR)
+                return
+            end
+
+            local has_cmp, cmp = pcall(require, "cmp")
+            if not has_cmp then
+                vim.notify("nvim-cmp not loaded", vim.log.levels.ERROR)
+                return
+            end
+
             require("luasnip.loaders.from_vscode").lazy_load()
             luasnip.config.setup({})
 

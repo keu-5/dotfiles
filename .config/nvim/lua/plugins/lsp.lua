@@ -37,11 +37,26 @@ return {
                         diagnostics = { disable = { 'missing-fields' } },
                     },
                 },
-                -- pyright = {},
-                -- tsserver = {},
-                -- rust_analyzer = {},
-                -- gopls = {},
-                -- clangd = {},
+                -- TypeScript/JavaScript (Next.js対応)
+                ts_ls = {},
+                -- HTML
+                html = {},
+                -- CSS/Tailwind CSS
+                cssls = {},
+                tailwindcss = {},
+                -- Python
+                pyright = {},
+                -- Go
+                gopls = {},
+                -- Ruby
+                ruby_lsp = {},
+                -- Docker
+                dockerls = {},
+                docker_compose_language_service = {},
+                -- YAML
+                yamlls = {},
+                -- JSON
+                jsonls = {},
             }
 
             -- mason-lspconfig の設定（masonの後にセットアップ）
