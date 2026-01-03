@@ -40,3 +40,9 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+
+# alias
+alias ls='ls -a'
+
+# Added by Antigravity
+export PATH="/Users/cafe/.antigravity/antigravity/bin:$PATH"
