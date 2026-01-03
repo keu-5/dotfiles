@@ -1,0 +1,9 @@
+profiles:
+  strict:
+    kill:
+      - Dropbox
+      - "Google Drive"
+      - OneDrive
+  dev:
+    kill:
+      - Dropbox
