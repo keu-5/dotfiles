@@ -118,7 +118,10 @@ keymap("n", "<C-d>", "<C-d>zz", { desc = "半ページ下に移動して中央�
 keymap("n", "<C-u>", "<C-u>zz", { desc = "半ページ上に移動して中央に" })
 
 -- normalモードに戻る
-keymap("i", "jj", "<Esc>", { desc = "jjでnormalモードに戻る" })
+-- 挿入モード (i) で jj を押すと Esc に変換
+vim.keymap.set("i", "jj", "<Esc>", { desc = "jjでnormalモードに戻る" })
+-- ターミナルモード (t) で jj を押すと ノーマルモードへ移行
+vim.keymap.set("t", "jj", [[<C-\><C-n>]], { desc = "jjでnormalモードに戻る" })
 
 -- =============================================
 -- 自動コマンド

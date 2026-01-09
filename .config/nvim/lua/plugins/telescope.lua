@@ -1,6 +1,6 @@
 return {
     "nvim-telescope/telescope.nvim",
-    branch = "0.1.x",
+    branch = "master",
     dependencies = {
         "nvim-lua/plenary.nvim",
         {
@@ -65,10 +65,22 @@ return {
                         ["<C-d>"] = actions.preview_scrolling_down,
                         ["<PageUp>"] = actions.results_scrolling_up,
                         ["<PageDown>"] = actions.results_scrolling_down,
-                        ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
-                        ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
-                        ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
-                        ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+                        ["<Tab>"] = function(prompt_bufnr)
+                            actions.toggle_selection(prompt_bufnr)
+                            actions.move_selection_worse(prompt_bufnr)
+                        end,
+                        ["<S-Tab>"] = function(prompt_bufnr)
+                            actions.toggle_selection(prompt_bufnr)
+                            actions.move_selection_better(prompt_bufnr)
+                        end,
+                        ["<C-q>"] = function(prompt_bufnr)
+                            actions.send_to_qflist(prompt_bufnr)
+                            actions.open_qflist(prompt_bufnr)
+                        end,
+                        ["<M-q>"] = function(prompt_bufnr)
+                            actions.send_selected_to_qflist(prompt_bufnr)
+                            actions.open_qflist(prompt_bufnr)
+                        end,
                         ["<C-l>"] = actions.complete_tag,
                         ["<C-_>"] = actions.which_key, -- keys from pressing <C-/>
                     },
@@ -78,10 +90,22 @@ return {
                         ["<C-x>"] = actions.select_horizontal,
                         ["<C-v>"] = actions.select_vertical,
                         ["<C-t>"] = actions.select_tab,
-                        ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
-                        ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
-                        ["<C-q>"] = actions.send_to_qflist + actions.open_qflist,
-                        ["<M-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
+                        ["<Tab>"] = function(prompt_bufnr)
+                            actions.toggle_selection(prompt_bufnr)
+                            actions.move_selection_worse(prompt_bufnr)
+                        end,
+                        ["<S-Tab>"] = function(prompt_bufnr)
+                            actions.toggle_selection(prompt_bufnr)
+                            actions.move_selection_better(prompt_bufnr)
+                        end,
+                        ["<C-q>"] = function(prompt_bufnr)
+                            actions.send_to_qflist(prompt_bufnr)
+                            actions.open_qflist(prompt_bufnr)
+                        end,
+                        ["<M-q>"] = function(prompt_bufnr)
+                            actions.send_selected_to_qflist(prompt_bufnr)
+                            actions.open_qflist(prompt_bufnr)
+                        end,
                         ["j"] = actions.move_selection_next,
                         ["k"] = actions.move_selection_previous,
                         ["H"] = actions.move_to_top,
@@ -102,11 +126,6 @@ return {
             pickers = {
                 find_files = {
                     find_command = { "rg", "--files", "--hidden", "--glob", "!**/.git/*" },
-                },
-                live_grep = {
-                    additional_args = function(opts)
-                        return { "--hidden" }
-                    end
                 },
                 buffers = {
                     previewer = false,
@@ -137,7 +156,7 @@ return {
         })
 
         -- 拡張を読み込み
-        pcall(telescope.load_extension, "fzf")
+        -- pcall(telescope.load_extension, "fzf")
         pcall(telescope.load_extension, "ui-select")
     end,
 }

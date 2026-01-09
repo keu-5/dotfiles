@@ -91,10 +91,9 @@ return {
         },
         win = {
           border = "rounded",
-          position = "bottom",
-          margin = { 1, 0, 1, 0 },
-          padding = { 2, 2, 2, 2 },
-          winblend = 0,
+          wo = {
+            winblend = 0,
+          },
         },
         layout = {
           height = { min = 4, max = 25 },
