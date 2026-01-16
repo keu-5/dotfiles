@@ -38,7 +38,7 @@ return {
                     },
                 },
                 -- TypeScript/JavaScript (Next.js対応)
-                ts_ls = {},
+                tsserver = {},
                 -- HTML
                 html = {},
                 -- CSS/Tailwind CSS
