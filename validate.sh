@@ -68,6 +68,7 @@ files=(
     "vscode-manager/settings.json"
     "vscode-manager/extensions.txt"
     "tmux-manager/setup-tmux.sh"
+    "tmux-manager/push-terminfo.sh"
     ".zshrc"
     ".config/nvim/init.lua"
     ".config/tmux/tmux.conf"
@@ -89,6 +90,7 @@ scripts=(
     "homebrew/setup.sh"
     "latex/setup-latex.sh"
     "tmux-manager/setup-tmux.sh"
+    "tmux-manager/push-terminfo.sh"
     "vscode-manager/setup-vscode.sh"
 )
 

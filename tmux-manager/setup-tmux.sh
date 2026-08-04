@@ -144,7 +144,9 @@ fi
 # 「missing or unsuitable terminal」で失敗する。
 if [[ -n "$TERM" ]] && ! infocmp "$TERM" &>/dev/null; then
   log_warning "この端末の terminfo ($TERM) がこのマシンにありません"
-  log_info "tmux の attach に失敗します。対処は tmux-manager/README.md を参照してください"
+  log_info "このままでは tmux の起動に失敗します。手元PCの dotfiles で次を実行してください："
+  echo -e "${BLUE}   ./tmux-manager/push-terminfo.sh <このマシンのSSH先指定>${NC}"
+  log_info "詳細は tmux-manager/README.md の「落とし穴と対処」を参照してください"
 fi
 
 echo ""

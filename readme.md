@@ -12,7 +12,7 @@ Neovim、zsh などの設定を含みます。
 | zsh      | `.zshrc`                   | `install.sh`                     |
 | VS Code  | `vscode-manager/`          | `vscode-manager/setup-vscode.sh` |
 | LaTeX    | `latex/`                   | `latex/setup-latex.sh`           |
-| tmux     | `.config/tmux/`            | `tmux-manager/setup-tmux.sh`     |
+| tmux     | `.config/tmux/`            | `tmux-manager/setup-tmux.sh`（設定の配置）<br>`tmux-manager/push-terminfo.sh`（SSH 先へ terminfo 転送） |
 | その他   | 必要に応じて追加           | -                                |
 
 ## 🛠️ セットアップ方法
@@ -43,6 +43,14 @@ cd latex && chmod +x setup-latex.sh && ./setup-latex.sh && cd ..
 
 # 6. tmux環境のセットアップ（必要に応じて。Homebrew に依存しないので Linux でも実行できる）
 chmod +x tmux-manager/setup-tmux.sh && ./tmux-manager/setup-tmux.sh
+```
+
+SSH 先で tmux を使う場合、手元PCの端末（Ghostty など）の terminfo が SSH 先に無いと
+`missing or unsuitable terminal` で起動できません。手元PCで次を1回実行して送り込みます。
+
+```shell
+# ↓ SSH 先ではなく「手元PC」で実行する
+chmod +x tmux-manager/push-terminfo.sh && ./tmux-manager/push-terminfo.sh <SSH先>
 ```
 
 基本セットアップ（`install.sh`）により、zsh 設定ファイルが **シンボリックリンクで配置**されます：
@@ -105,6 +113,12 @@ LaTeX 関連の設定（`latex/`ディレクトリ）は`latex/setup-latex.sh`�
 - tmux 設定ファイル（`.config/tmux/`）のシンボリックリンク作成
 - 設定ファイルの読み込み確認（動作中の tmux サーバには触らない）
 - terminfo の確認
+
+### tmux-manager/push-terminfo.sh
+
+- 手元PCの端末の terminfo を SSH 先の `~/.terminfo` に転送（root 権限不要）
+- 転送後に SSH 先で実際に引けるかを確認
+- **SSH 先ではなく手元PCで実行する**（送るのは手元の端末が持っている記述のため）
 
 > 📄 **LaTeX の詳細設定**: キーバインド、使用方法、必要なソフトウェアについては [`latex/README.md`](latex/README.md) を参照してください。
 >

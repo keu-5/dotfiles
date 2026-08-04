@@ -7,12 +7,16 @@ SSH が切れても remote 側の作業（主に Claude Code の対話セッシ�
 
 ```text
 tmux-manager/
-├── README.md          # このファイル
-└── setup-tmux.sh      # tmux環境セットアップスクリプト
+├── README.md           # このファイル
+├── setup-tmux.sh       # tmux環境セットアップスクリプト（SSH先で実行する）
+└── push-terminfo.sh    # 手元の端末の terminfo を SSH 先へ送る（★手元PCで実行する）
 
 .config/tmux/
-└── tmux.conf          # tmux 設定ファイルの実体
+└── tmux.conf           # tmux 設定ファイルの実体
 ```
+
+2つのスクリプトは実行する場所が違います。`setup-tmux.sh` は設定を置きたいマシン（＝SSH 先）で、
+`push-terminfo.sh` は端末が動いているマシン（＝手元PC）で実行します。
 
 ## なぜ tmux を使うのか
 
@@ -160,20 +164,54 @@ missing or unsuitable terminal: xterm-ghostty
 TERM=xterm-256color tmux new-session -A -s main
 ```
 
-**恒久対処**（手元PC側で1回実行する）。Ghostty の terminfo を SSH 先の `~/.terminfo` に送り込みます。
+**恒久対処**（手元PC側で1回実行する）。手元にある terminfo を SSH 先の `~/.terminfo` に送り込みます。
 root 権限もパッケージのインストールも不要です。
 
 ```bash
-# ↓ これは remote ではなく「手元のノートPC」で実行する
+# ↓ これは remote ではなく「手元のノートPC」で、dotfiles のディレクトリで実行する
+./tmux-manager/push-terminfo.sh rtx4070ti
+```
+
+引数は `ssh` に渡すのと同じ指定なので、`user@host` の形でも構いません。複数台まとめても実行できます。
+送る terminfo は既定で現在の `$TERM` です。tmux の中から実行する場合は `$TERM` が tmux 自身のものに
+なっているため、`--term xterm-ghostty` のように明示してください（スクリプトも警告します）。
+
+やっていることは Ghostty 公式ドキュメントが案内する次の 1 行と同じです。
+
+```bash
 infocmp -x xterm-ghostty | ssh rtx4070ti -- tic -x -
 ```
 
+スクリプトはこれに加えて、書き込み先を `~/.terminfo` に固定し（`tic` は既定ではシステムの
+terminfo データベースへ書こうとし、権限が無い場合にのみ `~/.terminfo` へ回るため、
+root かどうかで置き場所が変わらないようにする）、転送後に SSH 先で実際に引けるかを確認します。
+
 送り込んだあとは、`TERM` を変えずに `tmux` がそのまま起動します。
 
-> 検証状況: remote 側で `~/.terminfo` に `xterm-ghostty` のエントリを置けば
-> `TERM=xterm-ghostty` のまま tmux が起動すること、`tic -x -` が root 権限なしで
-> `~/.terminfo` に書き込むことは実測済み。
-> 上の 1 行を手元PCから実行した結果は未検証（remote 側からは手元PCを操作できないため）。
+#### `tic` の警告は無視してよい
+
+転送時、次の警告が出ることがあります。**これは互換性の注意であって失敗ではありません**（`tic` の終了コードは 0）。
+
+```console
+"<stdin>", line 2, col 31, terminal 'xterm-ghostty': older tic versions may treat the description field as an alias
+```
+
+エントリの先頭行は `xterm-ghostty|ghostty|Ghostty,` という形で、最後の `Ghostty` は説明文です。
+これを古い `tic` はエイリアス（別名）と誤解しうる、という注意です。導入結果には影響しません。
+`push-terminfo.sh` は転送後に SSH 先で `infocmp` を引いて成否を判定するので、
+この警告が出ていても「検証は通っています」と明示して表示します。
+
+成功したかどうかは SSH 先で次のように確認できます。
+
+```bash
+infocmp xterm-ghostty >/dev/null && echo OK
+```
+
+> 検証状況: SSH 先（rtx4070ti / Ubuntu 22.04, ncurses 6.3）に `~/.terminfo/x/xterm-ghostty` が
+> 置かれ、`TERM=xterm-ghostty` のまま tmux が起動することを実測済み。上記の警告も再現し、
+> 終了コードが 0 で導入が成功することを確認済み。
+> `push-terminfo.sh` 自体は、`ssh` を差し替えた代役でローカルに転送・検証・失敗時の挙動を確認済み。
+> 手元PCの Ghostty から実際に走らせた結果は未検証（SSH 先からは手元PCを操作できないため）。
 
 ### 2. 再接続しても、既に開いていたシェルの環境変数は古いまま
 
