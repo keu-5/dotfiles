@@ -46,3 +46,9 @@ alias ls='ls -a'
 
 # Added by Antigravity
 export PATH="/Users/cafe/.antigravity/antigravity/bin:$PATH"
+
+# starship
+eval "$(starship init zsh)"
+
+# cargo
+export PATH="$HOME/.cargo/bin:$PATH"
