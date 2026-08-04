@@ -12,6 +12,7 @@ Neovim、zsh などの設定を含みます。
 | zsh      | `.zshrc`                   | `install.sh`                     |
 | VS Code  | `vscode-manager/`          | `vscode-manager/setup-vscode.sh` |
 | LaTeX    | `latex/`                   | `latex/setup-latex.sh`           |
+| tmux     | `.config/tmux/`            | `tmux-manager/setup-tmux.sh`     |
 | その他   | 必要に応じて追加           | -                                |
 
 ## 🛠️ セットアップ方法
@@ -39,6 +40,9 @@ chmod +x vscode-manager/setup-vscode.sh && ./vscode-manager/setup-vscode.sh
 
 # 5. LaTeX環境のセットアップ（必要に応じて）
 cd latex && chmod +x setup-latex.sh && ./setup-latex.sh && cd ..
+
+# 6. tmux環境のセットアップ（必要に応じて。Homebrew に依存しないので Linux でも実行できる）
+chmod +x tmux-manager/setup-tmux.sh && ./tmux-manager/setup-tmux.sh
 ```
 
 基本セットアップ（`install.sh`）により、zsh 設定ファイルが **シンボリックリンクで配置**されます：
@@ -51,6 +55,12 @@ Neovim 環境セットアップ（`nvim-manager/setup-nvim.sh`）により、Neo
 
 ```txt
 ~/.config/nvim        → dotfiles/.config/nvim
+```
+
+tmux 環境セットアップ（`tmux-manager/setup-tmux.sh`）により、tmux 設定が配置されます：
+
+```txt
+~/.config/tmux        → dotfiles/.config/tmux
 ```
 
 LaTeX 関連の設定（`latex/`ディレクトリ）は`latex/setup-latex.sh`で別途処理されます。
@@ -90,7 +100,15 @@ LaTeX 関連の設定（`latex/`ディレクトリ）は`latex/setup-latex.sh`�
 - 必要な Perl モジュール
 - .latexmkrc の設定
 
+### tmux-manager/setup-tmux.sh
+
+- tmux 設定ファイル（`.config/tmux/`）のシンボリックリンク作成
+- 設定ファイルの読み込み確認（動作中の tmux サーバには触らない）
+- terminfo の確認
+
 > 📄 **LaTeX の詳細設定**: キーバインド、使用方法、必要なソフトウェアについては [`latex/README.md`](latex/README.md) を参照してください。
+>
+> 📄 **tmux の使い方**: SSH が切れても作業を残す手順、キー操作、落とし穴については [`tmux-manager/README.md`](tmux-manager/README.md) を参照してください。
 
 ## 🧼 注意点
 

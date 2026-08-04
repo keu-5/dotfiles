@@ -41,8 +41,10 @@ log_section "ディレクトリ構造の確認"
 # 必要なディレクトリの存在確認
 directories=(
     ".config/nvim"
-    "homebrew" 
+    ".config/tmux"
+    "homebrew"
     "latex"
+    "tmux-manager"
     "vscode-manager"
 )
 
@@ -65,8 +67,10 @@ files=(
     "vscode-manager/setup-vscode.sh"
     "vscode-manager/settings.json"
     "vscode-manager/extensions.txt"
+    "tmux-manager/setup-tmux.sh"
     ".zshrc"
     ".config/nvim/init.lua"
+    ".config/tmux/tmux.conf"
 )
 
 for file in "${files[@]}"; do
@@ -84,6 +88,7 @@ scripts=(
     "install.sh"
     "homebrew/setup.sh"
     "latex/setup-latex.sh"
+    "tmux-manager/setup-tmux.sh"
     "vscode-manager/setup-vscode.sh"
 )
 
@@ -101,6 +106,7 @@ log_section "シンボリックリンクの確認"
 # ホームディレクトリのシンボリックリンク確認
 links=(
     "$HOME/.config/nvim:$DOTFILES_DIR/.config/nvim"
+    "$HOME/.config/tmux:$DOTFILES_DIR/.config/tmux"
     "$HOME/.zshrc:$DOTFILES_DIR/.zshrc"
 )
 
@@ -154,13 +160,17 @@ commands=(
     "brew:Homebrew"
     "git:Git"
     "zsh:Z Shell"
+    "tmux:tmux"
 )
 
 for cmd_pair in "${commands[@]}"; do
     IFS=':' read -r cmd desc <<< "$cmd_pair"
     
     if command -v "$cmd" &>/dev/null; then
-        version=$(eval "$cmd --version 2>/dev/null | head -1" || echo "不明")
+        # --version を持たないコマンド（tmux など）は -V を試す
+        version=$(eval "$cmd --version 2>/dev/null | head -1" || true)
+        [[ -z "$version" ]] && version=$(eval "$cmd -V 2>/dev/null | head -1" || true)
+        [[ -z "$version" ]] && version="不明"
         log_success "✓ $desc が利用可能です ($version)"
     else
         log_warning "⚠ $desc が見つかりません"
